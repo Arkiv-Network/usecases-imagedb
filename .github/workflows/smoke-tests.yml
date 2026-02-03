@@ -3,7 +3,7 @@ name: Smoke Tests
 on:
   # Run every 2 hours
   schedule:
-    - cron: '0 */2 * * *'
+    - cron: "0 */2 * * *"
 
   # Allow manual trigger
   workflow_dispatch:
@@ -34,7 +34,7 @@ jobs:
 
       - name: Run smoke tests
         env:
-          TEST_BASE_URL: https://imagedb.online
+          TEST_BASE_URL: https://imagedb.usecases.arkiv.network
         run: bun test test/smoke.test.ts
 
       - name: Report failure to GlitchTip
@@ -73,7 +73,7 @@ jobs:
             const body = `
             ## Smoke Tests Failed
 
-            The scheduled smoke tests have failed for imagedb.online
+            The scheduled smoke tests have failed for imagedb.usecases.arkiv.network
 
             **Details:**
             - Run ID: ${{ github.run_id }}

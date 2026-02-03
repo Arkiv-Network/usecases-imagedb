@@ -17,7 +17,7 @@
 
 ## 🚀 Live Demo
 
-Visit **[https://imagedb.online](https://imagedb.online)** to try the interactive demo:
+Visit **[https://imagedb.usecases.arkiv.network](https://imagedb.usecases.arkiv.network)** to try the interactive demo:
 - Upload PNG/JPEG files up to 25MB
 - See real-time chunking and integrity verification
 - Download the reconstructed files
@@ -27,7 +27,7 @@ Visit **[https://imagedb.online](https://imagedb.online)** to try the interactiv
 
 ### Upload Image
 ```bash
-curl -X POST https://imagedb.online/media \
+curl -X POST https://imagedb.usecases.arkiv.network/media \
   -F "file=@image.png" \
   -H "Idempotency-Key: unique-key-123"
 ```
@@ -42,12 +42,12 @@ curl -X POST https://imagedb.online/media \
 
 ### Retrieve Image
 ```bash
-curl https://imagedb.online/media/{media_id} -o retrieved-image.png
+curl https://imagedb.usecases.arkiv.network/media/{media_id} -o retrieved-image.png
 ```
 
 ### Check Quota
 ```bash
-curl https://imagedb.online/quota
+curl https://imagedb.usecases.arkiv.network/quota
 ```
 
 ## 🛠️ Self-Hosted Deployment
@@ -83,12 +83,12 @@ curl https://imagedb.online/quota
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NODE_ENV` | Environment mode | `production` |
-| `PORT` | Server port | `3000` |
-| `ARKIV_RPC_URL` | Arkiv RPC endpoint | `https://kaolin.hoodi.arkiv.network/rpc` |
-| `ARKIV_CHAIN_ID` | Arkiv chain ID | `60138453025` |
+| Variable         | Description        | Default                                  |
+| ---------------- | ------------------ | ---------------------------------------- |
+| `NODE_ENV`       | Environment mode   | `production`                             |
+| `PORT`           | Server port        | `3000`                                   |
+| `ARKIV_RPC_URL`  | Arkiv RPC endpoint | `https://kaolin.hoodi.arkiv.network/rpc` |
+| `ARKIV_CHAIN_ID` | Arkiv chain ID     | `60138453025`                            |
 
 ### Docker Compose Configuration
 
@@ -97,7 +97,7 @@ version: '3.8'
 
 services:
   imagedb:
-    image: moonplkr/imagesdb:latest
+    image: ghcr.io/arkiv-network/usecases-imagedb:latest
     container_name: imagedb
     ports:
       - "3000:3000"
@@ -233,13 +233,13 @@ const imageUrl = URL.createObjectURL(imageBlob);
 
 ### Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/media` | Upload image file |
-| `GET` | `/media/{id}` | Retrieve image |
-| `GET` | `/quota` | Check quota usage |
-| `GET` | `/status/{key}` | Upload status |
-| `GET` | `/health` | Health check |
+| Method | Endpoint        | Description       |
+| ------ | --------------- | ----------------- |
+| `POST` | `/media`        | Upload image file |
+| `GET`  | `/media/{id}`   | Retrieve image    |
+| `GET`  | `/quota`        | Check quota usage |
+| `GET`  | `/status/{key}` | Upload status     |
+| `GET`  | `/health`       | Health check      |
 
 ### Rate Limits (Free Tier)
 
@@ -292,7 +292,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 - **Issues**: [GitHub Issues](https://github.com/m00npl/imagedb/issues)
 - **Email**: [maciej.maciejowski@arkiv.network](mailto:maciej.maciejowski@arkiv.network)
-- **Demo**: [https://imagedb.online](https://imagedb.online)
+- **Demo**: [https://imagedb.usecases.arkiv.network](https://imagedb.usecases.arkiv.network)
 
 ---
 

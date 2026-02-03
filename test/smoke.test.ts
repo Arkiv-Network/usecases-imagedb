@@ -1,6 +1,7 @@
-import { describe, test, expect } from "bun:test";
+import { describe, expect, test } from "bun:test";
 
-const BASE_URL = process.env.TEST_BASE_URL || 'https://imagedb.online';
+const BASE_URL =
+  process.env.TEST_BASE_URL || "https://imagedb.usecases.arkiv.network";
 
 describe("Smoke Tests", () => {
   test("Health endpoint should return healthy status", async () => {
@@ -8,54 +9,53 @@ describe("Smoke Tests", () => {
     expect(response.status).toBe(200);
 
     const data = await response.json();
-    expect(data.status).toBe('healthy');
+    expect(data.status).toBe("healthy");
     expect(data.timestamp).toBeDefined();
   });
 
   test("Homepage should be accessible", async () => {
     const response = await fetch(BASE_URL);
     expect(response.status).toBe(200);
-    expect(response.headers.get('content-type')).toContain('text/html');
+    expect(response.headers.get("content-type")).toContain("text/html");
   });
 
   test("Upload endpoint should reject request without file", async () => {
     const formData = new FormData();
 
     const response = await fetch(`${BASE_URL}/media`, {
-      method: 'POST',
-      body: formData
+      method: "POST",
+      body: formData,
     });
 
     expect(response.status).toBe(400);
     const data = await response.json();
-    expect(data.error).toBe('No file provided');
+    expect(data.error).toBe("No file provided");
   });
 
   test("Upload endpoint should accept valid PNG file format", async () => {
     // Create a small test image (1x1 pixel PNG)
     const testImageData = new Uint8Array([
-      0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
-      0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52,
-      0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
-      0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0x15, 0xC4,
-      0x89, 0x00, 0x00, 0x00, 0x0A, 0x49, 0x44, 0x41,
-      0x54, 0x78, 0x9C, 0x63, 0x00, 0x01, 0x00, 0x00,
-      0x05, 0x00, 0x01, 0x0D, 0x0A, 0x2D, 0xB4, 0x00,
-      0x00, 0x00, 0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE,
-      0x42, 0x60, 0x82
+      0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
+      0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+      0x08, 0x06, 0x00, 0x00, 0x00, 0x1f, 0x15, 0xc4, 0x89, 0x00, 0x00, 0x00,
+      0x0a, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9c, 0x63, 0x00, 0x01, 0x00, 0x00,
+      0x05, 0x00, 0x01, 0x0d, 0x0a, 0x2d, 0xb4, 0x00, 0x00, 0x00, 0x00, 0x49,
+      0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
     ]);
 
     const formData = new FormData();
-    const file = new File([testImageData], 'smoke-test.png', { type: 'image/png' });
-    formData.append('file', file);
+    const file = new File([testImageData], "smoke-test.png", {
+      type: "image/png",
+    });
+    formData.append("file", file);
 
     // Try to upload - may fail due to quota, but should not return 500
     const uploadResponse = await fetch(`${BASE_URL}/media`, {
-      method: 'POST',
+      method: "POST",
       body: formData,
       headers: {
-        'Idempotency-Key': `smoke-test-${Date.now()}`
-      }
+        "Idempotency-Key": `smoke-test-${Date.now()}`,
+      },
     });
 
     // Accept either success (200) or quota limit (400), but not server error (500)
@@ -66,7 +66,7 @@ describe("Smoke Tests", () => {
     // If successful, should have media_id
     if (uploadResponse.status === 200) {
       expect(uploadData.media_id).toBeDefined();
-      expect(uploadData.message).toBe('Upload successful');
+      expect(uploadData.message).toBe("Upload successful");
     }
 
     // If quota exceeded, should have meaningful error
@@ -90,9 +90,9 @@ describe("Smoke Tests", () => {
   test("Non-existent media should return 404", async () => {
     // Note: This endpoint has performance issues (~10s response time)
     // TODO: Investigate why 404 responses are so slow
-    const fakeMediaId = 'non-existent-media-id-12345';
+    const fakeMediaId = "non-existent-media-id-12345";
     const response = await fetch(`${BASE_URL}/media/${fakeMediaId}`, {
-      signal: AbortSignal.timeout(15000) // 15 second timeout due to slow 404 responses
+      signal: AbortSignal.timeout(15000), // 15 second timeout due to slow 404 responses
     });
     expect(response.status).toBe(404);
   }, 20000); // 20 second test timeout
